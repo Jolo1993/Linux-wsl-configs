@@ -1,6 +1,48 @@
 #!/bin/bash
+# Init install flags
 
+install_all=false
+install_tofu=false
+install_nvim=false
+install_brew=false
+
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --all) install_all=true ;;
+        --tofu) install_tofu=true ;;
+        --nvim) install_nvim=true ;;
+        --brew) install_brew=true ;;
+        --os)
+            if [[ "$2" == "linux" || "$2" == "mac"]]; then
+                OS=$2
+                shift #move past argument value
+            else
+                echo "invalid OS: $2. Options mac or linux"
+                exit 1
+            fi
+            ;;
+        *) echo "unknow parameter passed: $1"; exit 1 ;;
+    esac
+    shift
+done
+#____________________________________________________Modules________________________________________________________
+#_____________________________________________Default folder structur_______________________________________________
+fileStructur() {
+  mkdir -p $HOME/home_projects/code
+  newDirs=($1 $2 $3)
+  for D in "${newDirs[@]}"; do
+      if [ ! -d $home/home_projects/code/$D ]; then
+          mkdir $home/home_projects/code/$D
+      else
+          echo "Directory already setup"
+      fi
+  done  
+}
+
+fileStructure 
+#______________________________________________Setup Nvim with pllugin______________________________________________
 # Function to check if NeoVim is installed
+setup_neovim() {
 is_neovim_installed() {
   if command -v nvim >/dev/null 2>&1; then
     return 0 # NeoVim is installed
@@ -81,4 +123,186 @@ fi
 
 # Configure NeoVim
 configure_neovim
+}
+#_________________________________________________HOMEBREW SETUP____________________________________________________
+
+# Set up Homebrew (Linuxbrew) on Ubuntu
+setup_brw(){
+# Check if running as root
+if [ "$(id -u)" -eq 0 ]; then
+    echo "This script should not be run as root. Please run as a normal user."
+    exit 1
+fi
+
+# Update and install necessary packages
+echo "Updating and installing necessary packages..."
+sudo apt-get update
+sudo apt-get install build-essential curl file git -y
+
+# Install Homebrew
+echo "Installing Homebrew..."
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Set up Homebrew environment
+echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.profile
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+echo "Homebrew installation complete."
+echo "You can now use 'brew' to install packages."
+}
+
+#________________________________________________Open Tofu Setup_______________________________________________
+setup_tofu(){
+# Download the installer script:
+curl --proto '=https' --tlsv1.2 -fsSL https://get.opentofu.org/install-opentofu.sh -o install-opentofu.sh
+# Alternatively: wget --secure-protocol=TLSv1_2 --https-only https://get.opentofu.org/install-opentofu.sh -O install-opentofu.sh
+
+# Give it execution permissions:
+chmod +x install-opentofu.sh
+
+# Please inspect the downloaded script
+
+# Run the installer:
+./install-opentofu.sh --install-method deb
+
+# Remove the installer:
+rm install-opentofu.sh
+
+sudo apt-get update
+sudo apt-get install -y apt-transport-https ca-certificates curl gnupg
+
+
+sudo apt-get update
+sudo apt-get install -y apt-transport-https ca-certificates curl gnupg
+
+
+echo \
+  "deb [signed-by=/etc/apt/keyrings/opentofu.gpg,/etc/apt/keyrings/opentofu-repo.gpg] https://packages.opentofu.org/opentofu/tofu/any/ any main
+deb-src [signed-by=/etc/apt/keyrings/opentofu.gpg,/etc/apt/keyrings/opentofu-repo.gpg] https://packages.opentofu.org/opentofu/tofu/any/ any main" | \
+  sudo tee /etc/apt/sources.list.d/opentofu.list > /dev/null
+
+
+
+sudo apt-get update
+sudo apt-get install -y tofu
+}
+
+___________________________________________________Modules End_______________________________________________
+
+
+# Check if all components should be installed
+if [ "$install_all" = true ]; then
+    setup_neovim "$1"
+    setup_brew
+    setup_tofu
+    
+    # Set flags for other components as true, and call their functions here
+fi
+
+# Individual setup checks
+# OpenTofu
+if [ "$install_tofu" = true ]; then
+    setup_tofu
+fi
+
+# nvim
+if [[ "$install_nvim" == true && -z "$OS" ]]; then
+    echo "You must specify an OS with --os when installing NeoVim with --nvim."
+    exit 1
+fi
+
+if [[ "$install_nvim" == true ]]; then
+    setup_nvim "$OS"
+fi
+
+# homebrew
+if [ "$install_brew" = true ]; then
+    setup_brew
+fi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
