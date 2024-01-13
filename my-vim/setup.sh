@@ -13,7 +13,7 @@ while [[ "$#" -gt 0 ]]; do
         --nvim) install_nvim=true ;;
         --brew) install_brew=true ;;
         --os)
-            if [[ "$2" == "linux" || "$2" == "mac"]]; then
+            if [[ "$2" == "linux" || "$2" == "mac" ]]; then
                 OS=$2
                 shift #move past argument value
             else
@@ -27,22 +27,30 @@ while [[ "$#" -gt 0 ]]; do
 done
 #____________________________________________________Modules________________________________________________________
 #_____________________________________________Default folder structur_______________________________________________
-fileStructur() {
+fileStructure() {
   mkdir -p $HOME/home_projects/code
-  newDirs=($1 $2 $3)
-  for D in "${newDirs[@]}"; do
-      if [ ! -d $home/home_projects/code/$D ]; then
-          mkdir $home/home_projects/code/$D
+      if [ ! -d $HOME/home_projects/code/infra ]; then
+          mkdir $HOME/home_projects/code/infra
       else
           echo "Directory already setup"
       fi
-  done  
+
+      if [ ! -d $HOME/home_projects/code/util ]; then
+          mkdir $HOME/home_projects/code/util
+      else
+          echo "Directory already setup"
+      fi
+
+      if [ ! -d $HOME/home_projects/code/programs ]; then
+          mkdir $HOME/home_projects/code/programs
+      else
+          echo "Directory already setup"
+      fi
 }
 
-fileStructure 
 #______________________________________________Setup Nvim with pllugin______________________________________________
 # Function to check if NeoVim is installed
-setup_neovim() {
+setup_nvim() {
 is_neovim_installed() {
   if command -v nvim >/dev/null 2>&1; then
     return 0 # NeoVim is installed
@@ -127,7 +135,7 @@ configure_neovim
 #_________________________________________________HOMEBREW SETUP____________________________________________________
 
 # Set up Homebrew (Linuxbrew) on Ubuntu
-setup_brw(){
+setup_brew(){
 # Check if running as root
 if [ "$(id -u)" -eq 0 ]; then
     echo "This script should not be run as root. Please run as a normal user."
@@ -149,8 +157,10 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 echo "Homebrew installation complete."
 echo "You can now use 'brew' to install packages."
-}
 
+(echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /home/jtl/.zshrc
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+}  
 #________________________________________________Open Tofu Setup_______________________________________________
 setup_tofu(){
 # Download the installer script:
@@ -187,8 +197,9 @@ sudo apt-get update
 sudo apt-get install -y tofu
 }
 
-___________________________________________________Modules End_______________________________________________
+#___________________________________________________Modules End_______________________________________________
 
+fileStructure 
 
 # Check if all components should be installed
 if [ "$install_all" = true ]; then
@@ -219,90 +230,6 @@ fi
 if [ "$install_brew" = true ]; then
     setup_brew
 fi
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
