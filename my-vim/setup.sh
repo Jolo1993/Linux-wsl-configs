@@ -158,8 +158,14 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 echo "Homebrew installation complete."
 echo "You can now use 'brew' to install packages."
 
-(echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /home/jtl/.zshrc
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> /home/jtl/.zshrc
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+
+echo "testing brew by installing fzf"
+brew install fzf
+yes | /home/linuxbrew/.linuxbrew/opt/fzf/install
+source $HOME/.zshrc
 }  
 #________________________________________________Open Tofu Setup_______________________________________________
 setup_tofu(){
