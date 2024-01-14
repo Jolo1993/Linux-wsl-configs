@@ -203,10 +203,18 @@ fileStructure
 
 # Check if all components should be installed
 if [ "$install_all" = true ]; then
-    setup_neovim "$1"
+   if [ -z "$OS" ]; then
+       read -p "Enter OS type for setup (linux/mac): " OS
+       if [[ "$OS" != "linux" && "$OS" != "mac" ]]; then
+           echo "invalid OS: $OS, Options: mac or linux"
+           exit 1
+       fi
+    fi
+    
+
+    setup_nvim "$OS"
     setup_brew
     setup_tofu
-    
     # Set flags for other components as true, and call their functions here
 fi
 
