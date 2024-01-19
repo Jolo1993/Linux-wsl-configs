@@ -4,14 +4,12 @@
 install_all=false
 install_tofu=false
 install_nvim=false
-install_brew=false
 
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         --all) install_all=true ;;
         --tofu) install_tofu=true ;;
         --nvim) install_nvim=true ;;
-        --brew) install_brew=true ;;
         --os)
             if [[ "$2" == "linux" || "$2" == "mac" ]]; then
                 OS=$2
@@ -132,41 +130,6 @@ fi
 # Configure NeoVim
 configure_neovim
 }
-#_________________________________________________HOMEBREW SETUP____________________________________________________
-
-# Set up Homebrew (Linuxbrew) on Ubuntu
-setup_brew(){
-# Check if running as root
-if [ "$(id -u)" -eq 0 ]; then
-    echo "This script should not be run as root. Please run as a normal user."
-    exit 1
-fi
-
-# Update and install necessary packages
-echo "Updating and installing necessary packages..."
-sudo apt-get update
-sudo apt-get install build-essential curl file git -y
-
-# Install Homebrew
-echo "Installing Homebrew..."
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-# Set up Homebrew environment
-echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.profile
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
-echo "Homebrew installation complete."
-echo "You can now use 'brew' to install packages."
-
-echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> /home/jtl/.zshrc
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
-
-echo "testing brew by installing fzf"
-brew install fzf
-yes | /home/linuxbrew/.linuxbrew/opt/fzf/install
-source $HOME/.zshrc
-}  
 #________________________________________________Open Tofu Setup_______________________________________________
 setup_tofu(){
 # Download the installer script:

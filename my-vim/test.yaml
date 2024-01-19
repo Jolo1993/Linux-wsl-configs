@@ -1,7 +1,0 @@
-- name: add repo host key to known_hosts
-  lineinfile: "create=yes dest=/home/ci/.ssh/known_hosts
-               line={{ repo_host_key.stdout }}
-               state=present"
-
-- name: make ci owner of buildbot_master dir
-  file: path={{ buildbot_master_path }}
