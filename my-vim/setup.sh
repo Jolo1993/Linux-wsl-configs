@@ -203,10 +203,7 @@ if [[ "$install_nvim" == true ]]; then
     setup_nvim "$OS"
 fi
 
-# homebrew
-if [ "$install_brew" = true ]; then
-    setup_brew
-fi
+
 
 
 
