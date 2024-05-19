@@ -1,5 +1,6 @@
 ### load zgem plugin manager
 ZGEM_HOME="$HOME/.zsh.zgem"
+
 [[ -e "$ZGEM_HOME" ]] || git clone 'https://github.com/qoomon/zgem.git' "$ZGEM_HOME"
 source "$ZGEM_HOME/zgem.zsh" # && ZGEM_VERBOSE='true'
 
