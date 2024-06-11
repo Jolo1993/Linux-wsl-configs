@@ -1,0 +1,7 @@
+language: 'rust'
+type: 'application'
+
+task:
+  build:
+    command: 'cargo build'
+
