@@ -64,8 +64,6 @@ echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 locale-gen
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
 
-# Network configuration is skipped as it is automatic with a wired connection
-
 # Set root password
 echo "root:password" | chpasswd
 
