@@ -1,0 +1,59 @@
+#!/bin/bash
+
+# Set variables
+EFI_PART=/dev/sda1
+ROOT_PART=/dev/sda2
+HOME_PART=/dev/sda3
+
+# Set keyboard layout to Danish Nordic
+loadkeys dk
+
+# Mount the file systems
+mount $ROOT_PART /mnt
+mkdir /mnt/boot
+mount $EFI_PART /mnt/boot
+mkdir /mnt/home
+mount $HOME_PART /mnt/home
+
+# Install essential packages
+pacstrap /mnt base linux linux-firmware
+
+# Generate fstab
+genfstab -U /mnt >> /mnt/etc/fstab
+
+# Chroot into the system
+arch-chroot /mnt <<EOF
+
+# Set the keyboard layout permanently
+echo "KEYMAP=dk" > /etc/vconsole.conf
+
+# Set the time zone
+ln -sf /usr/share/zoneinfo/Region/City /etc/localtime
+hwclock --systohc
+
+# Localization
+echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+locale-gen
+echo "LANG=en_US.UTF-8" > /etc/locale.conf
+
+# Network configuration is skipped as it is automatic with a wired connection
+
+# Set root password
+echo "root:password" | chpasswd
+
+# Install bootloader
+pacman -S --noconfirm grub efibootmgr
+grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
+grub-mkconfig -o /boot/grub/grub.cfg
+
+# Create a new user
+useradd -m -G wheel -s /bin/bash myuser
+echo "myuser:password" | chpasswd
+echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
+
+EOF
+
+# Unmount and reboot
+umount -R /mnt
+reboot
+

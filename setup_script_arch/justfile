@@ -1,0 +1,62 @@
+# justfile
+
+# Set the keyboard layout to Danish Nordic
+keyboard_layout:
+    loadkeys dk
+    sudo tee /etc/vconsole.conf <<< "KEYMAP=dk"
+
+# Update the system
+update:
+    sudo pacman -Syu --noconfirm
+
+# Install network manager
+install_network:
+    sudo pacman -S --noconfirm networkmanager
+    sudo systemctl enable NetworkManager
+    sudo systemctl start NetworkManager
+
+# Install Xorg
+install_xorg:
+    sudo pacman -S --noconfirm xorg xorg-server
+
+# Install NVIDIA drivers
+install_nvidia:
+    sudo pacman -S --noconfirm nvidia nvidia-utils nvidia-settings
+
+# Install COSMIC desktop environment
+install_cosmic:
+    sudo pacman -S --noconfirm gnome gnome-shell gnome-control-center gnome-tweaks
+    yay -S --noconfirm pop-shell pop-shell-shortcuts gnome-shell-extension-pop-shell-git
+    gnome-extensions enable pop-shell@system76.com
+    gnome-extensions enable pop-shell-shortcuts@system76.com
+    gsettings set org.gnome.shell.extensions.pop-shell activate-launcher "Super+Space"
+    sudo systemctl enable gdm
+    sudo systemctl start gdm
+
+# Install gaming-related software
+install_gaming:
+    sudo pacman -S --noconfirm steam lutris wine winetricks
+
+# Enable multilib repository for 32-bit applications (necessary for some games)
+enable_multilib:
+    sudo sed -i '/\[multilib\]/,/Include/s/^#//' /etc/pacman.conf
+    sudo pacman -Syu --noconfirm
+
+# Set up locale and timezone (assuming Region/City is Copenhagen)
+locale_and_timezone:
+    sudo ln -sf /usr/share/zoneinfo/Europe/Copenhagen /etc/localtime
+    sudo hwclock --systohc
+
+
+# Run all setup tasks
+setup:
+    just keyboard_layout
+    just update
+    just install_network
+    just enable_multilib
+    just install_xorg
+    just install_nvidia
+    just install_cosmic
+    just install_gaming
+    just locale_and_timezone
+
