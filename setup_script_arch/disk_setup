@@ -82,6 +82,6 @@ echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
 EOF
 
 # Unmount and reboot
-#umount -R /mnt
-#reboot
+umount -R /mnt
+reboot
 
