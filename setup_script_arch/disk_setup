@@ -31,15 +31,17 @@ EOF
 
 
 
-
+mkfs.ext4 /dev/sda3
+mkfs.ext4 /dev/sda2
+mkfs.fat -F32 /dev/sda1
 
 
 # Mount the file systems
-mount $ROOT_PART /mnt
+mount /dev/sda2 /mnt
 mkdir /mnt/boot
-mount $EFI_PART /mnt/boot
+mount /dev/sda1 /mnt/boot
 mkdir /mnt/home
-mount $HOME_PART /mnt/home
+mount /dev/sda3 /mnt/home
 
 # Install essential packages
 pacstrap /mnt base linux linux-firmware
