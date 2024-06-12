@@ -8,6 +8,42 @@ HOME_PART=/dev/sda3
 # Set keyboard layout to Danish Nordic
 loadkeys dk
 
+# Partition the primary disk
+fdisk $DISK1 <<EOF
+g
+n
+
+
++512M
+t
+1
+n
+
+
++50G
+n
+
+
+
+w
+EOF
+
+# Partition the secondary disk (optional)
+fdisk $DISK2 <<EOF
+g
+n
+
+
+
+w
+EOF
+
+
+
+
+
+
+
 # Mount the file systems
 mount $ROOT_PART /mnt
 mkdir /mnt/boot
