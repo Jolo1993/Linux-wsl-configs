@@ -9,7 +9,7 @@ HOME_PART=/dev/sda3
 loadkeys dk
 
 # Partition the primary disk
-fdisk $DISK1 <<EOF
+fdisk /dev/sda <<EOF
 g
 n
 
