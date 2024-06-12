@@ -28,16 +28,6 @@ n
 w
 EOF
 
-# Partition the secondary disk (optional)
-fdisk $DISK2 <<EOF
-g
-n
-
-
-
-w
-EOF
-
 
 
 
@@ -90,6 +80,6 @@ echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
 EOF
 
 # Unmount and reboot
-umount -R /mnt
-reboot
+#umount -R /mnt
+#reboot
 
